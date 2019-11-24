@@ -40,7 +40,7 @@ bubble (x:x':xs)
 bubble xs       = xs
 
 bbSort :: Ord a => [a] -> [a]
-bbSort x = fixpoint bubble x
+bbSort = fixpoint bubble
 
 bbSortProg :: Ord a => [a] -> [[a]]
-bbSortProg x = fixProgress bubble x
+bbSortProg = fixProgress bubble
