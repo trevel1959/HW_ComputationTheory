@@ -9,19 +9,21 @@ iterApp f n x
     | n == 0  =  x
     | n <  0  =  error "Cannot apply negative times!"
 
-
 progress :: Integral i => (t -> t) -> i -> t -> [t]
 progress f n x
     | n <  0     =  error "Cannot apply negative times!"
     | n == 0     =  [x]
-    | otherwise  =  x : progress f (n-1) (f x)
+    | otherwise  =  x : progress f (n-1) (f x)  
 
+fixpoint :: Eq t => (t -> t) -> t -> t
+fixpoint f x
+    | x == f x  = x
+    | otherwise = fixpoint f (f x)
 
--- fixpoint :: Eq t => (t -> t) -> t -> t
-
-
--- fixProgress :: Eq t => (t -> t) -> t -> [t]
-
+fixProgress :: Eq t => (t -> t) -> t -> [t]
+fixProgress f x
+    | x == f x  = [x]
+    | otherwise = x : fixProgress f (f x)
 
 delSameAdj :: Eq a => [a] -> [a]
 delSameAdj (x:x':xs)
@@ -31,11 +33,14 @@ delSameAdj xs    =  xs
 -- delSameAdj [x]   =  [x]
 -- delSameAdj []    =  []
 
+bubble :: Ord a => [a] -> [a]
+bubble (x:x':xs)
+    | x > x'    = x' : bubble (x:xs)
+    | otherwise = x : bubble (x':xs)
+bubble xs       = xs
 
--- bubble :: Ord a => [a] -> [a]
+bbSort :: Ord a => [a] -> [a]
+bbSort x = fixpoint bubble x
 
-
--- bbSort :: Ord a => [a] -> [a]
-
-
--- bbSortProg :: Ord a => [a] -> [[a]]
+bbSortProg :: Ord a => [a] -> [[a]]
+bbSortProg x = fixProgress bubble x
